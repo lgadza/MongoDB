@@ -6,9 +6,9 @@ const blogPostRouter = express.Router();
 
 blogPostRouter.post("/", async (req, res, next) => {
   try {
-    const newUser = new BlogPostModel(req.body);
+    const newBlogPost = new BlogPostModel(req.body);
 
-    const { _id } = await newUser.save();
+    const { _id } = await newBlogPost.save();
     res.status(201).send({ _id });
   } catch (error) {
     next(error);
@@ -24,14 +24,17 @@ blogPostRouter.get("/", async (req, res, next) => {
   }
 });
 
-blogPostRouter.get("/:userId", async (req, res, next) => {
+blogPostRouter.get("/:blogPostId", async (req, res, next) => {
   try {
-    const user = await BlogPostModel.findById(req.params.userId);
-    if (user) {
-      res.send(user);
+    const blogPost = await BlogPostModel.findById(req.params.blogPostId);
+    if (blogPost) {
+      res.send(blogPost);
     } else {
       next(
-        createHttpError(404, `User with id ${req.params.userId} not found!`)
+        createHttpError(
+          404,
+          `BlogPost with id ${req.params.blogPostId} not found!`
+        )
       );
     }
   } catch (error) {
@@ -39,19 +42,22 @@ blogPostRouter.get("/:userId", async (req, res, next) => {
   }
 });
 
-blogPostRouter.put("/:userId", async (req, res, next) => {
+blogPostRouter.put("/:blogPostId", async (req, res, next) => {
   try {
-    const updatedUser = await BlogPostModel.findByIdAndUpdate(
-      req.params.userId,
+    const updatedBlogPost = await BlogPostModel.findByIdAndUpdate(
+      req.params.blogPostId,
       req.body,
       { new: true, runValidators: true }
     );
 
-    if (updatedUser) {
-      res.send(updatedUser);
+    if (updatedBlogPost) {
+      res.send(updatedBlogPost);
     } else {
       next(
-        createHttpError(404, `User with id ${req.params.userId} not found!`)
+        createHttpError(
+          404,
+          `BlogPost with id ${req.params.blogPostId} not found!`
+        )
       );
     }
   } catch (error) {
@@ -59,17 +65,20 @@ blogPostRouter.put("/:userId", async (req, res, next) => {
   }
 });
 
-blogPostRouter.delete("/:userId", async (req, res, next) => {
+blogPostRouter.delete("/:blogPostId", async (req, res, next) => {
   try {
-    const deletedUser = await BlogPostModel.findByIdAndDelete(
-      req.params.userId
+    const deletedBlogPost = await BlogPostModel.findByIdAndDelete(
+      req.params.blogPostId
     );
 
-    if (deletedUser) {
+    if (deletedBlogPost) {
       res.status(204).send();
     } else {
       next(
-        createHttpError(404, `User with id ${req.params.userId} not found!`)
+        createHttpError(
+          404,
+          `BlogPost with id ${req.params.blogPostId} not found!`
+        )
       );
     }
   } catch (error) {

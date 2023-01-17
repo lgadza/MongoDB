@@ -4,16 +4,17 @@ const { Schema, model } = mongoose;
 
 const blogPostSchema = new Schema(
   {
-    firstName: { type: String, required: true },
-    lastName: { type: String, required: true },
-    email: { type: String, required: true },
-    dateOfBirth: { type: Date, required: true },
-    age: { type: Number, required: true },
-    address: {
-      street: { type: String },
-      number: { type: Number },
+    category: { type: String, required: true },
+    title: { type: String, required: true },
+    readTime: {
+      value: { type: Number },
+      unit: { type: String },
     },
-    professions: [String],
+    author: {
+      name: { type: String, required: true },
+      avatar: { type: String },
+    },
+    // content: { type: HTML },
   },
   {
     timestamps: true,

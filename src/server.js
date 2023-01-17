@@ -17,7 +17,7 @@ server.use(cors());
 server.use(express.json());
 
 // ******************************** ENDPOINTS *****************************************
-server.use("/blogPost", blogPostRouter);
+server.use("/blogPosts", blogPostRouter);
 
 // ***************************** ERROR HANDLERS ***************************************
 server.use(badRequestHandler);
