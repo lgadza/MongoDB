@@ -6,6 +6,7 @@ const blogPostSchema = new Schema(
   {
     category: { type: String, required: true },
     title: { type: String, required: true },
+    cover: { type: String },
     readTime: {
       value: { type: Number },
       unit: { type: String },
