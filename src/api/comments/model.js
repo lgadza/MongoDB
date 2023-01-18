@@ -14,5 +14,6 @@ const commentsSchema = new Schema(
   },
   { timestamps: true }
 );
+// export default commentsSchema;
 
 export default model("Comment", commentsSchema);

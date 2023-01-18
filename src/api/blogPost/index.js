@@ -1,6 +1,7 @@
 import express from "express";
 import createHttpError from "http-errors";
 import BlogPostModel from "./model.js";
+import CommentsModel from "../comments/model.js";
 
 const blogPostRouter = express.Router();
 
@@ -85,16 +86,16 @@ blogPostRouter.delete("/:blogPostId", async (req, res, next) => {
     next(error);
   }
 });
-// ********************************** EMBEDDED EXAMPLE ****************************************************
-blogPostRouter.post("/:blogPostId/comments", async (req, res, next) => {
+// ********************************** EMBEDDING**************************
+blogPostRouter.post("/:blogPostId", async (req, res, next) => {
   try {
-    const currentComment = await BlogPostModel.findById(req.body.blogPostId, {
-      _id: 0,
-    });
+    // const currentComment = new CommentsModel(req.body);
+
+    const currentComment = req.body;
 
     if (currentComment) {
       const blogPostToInsert = {
-        ...currentComment.toObject(),
+        ...req.body,
         commentDate: new Date(),
       };
 
