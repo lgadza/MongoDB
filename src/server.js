@@ -3,6 +3,7 @@ import listEndpoints from "express-list-endpoints";
 import cors from "cors";
 import mongoose from "mongoose";
 import blogPostRouter from "./api/blogPost/index.js";
+import commentsRouter from "./api/comments/index.js";
 import {
   badRequestHandler,
   notFoundHandler,
@@ -33,6 +34,7 @@ server.use(cors(corsOpts));
 
 // ******************************** ENDPOINTS *****************************************
 server.use("/blogPosts", blogPostRouter);
+server.use("/comments", commentsRouter);
 
 // ***************************** ERROR HANDLERS ***************************************
 server.use(badRequestHandler);

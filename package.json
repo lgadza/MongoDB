@@ -23,6 +23,7 @@
     "fs-extra": "^11.1.0",
     "http-error": "^0.0.6",
     "http-errors": "^2.0.0",
-    "mongoose": "^6.8.3"
+    "mongoose": "^6.8.3",
+    "query-to-mongo": "^0.10.2"
   }
 }
