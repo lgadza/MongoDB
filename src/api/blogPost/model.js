@@ -22,11 +22,24 @@ const blogPostSchema = new Schema(
     },
     // comments: { type: Array, required: true },
     comments: [commentsSchema],
+    likes: [{ type: Schema.Types.ObjectId, ref: "Author" }],
     authors: [{ type: Schema.Types.ObjectId, ref: "Author" }],
   },
   {
     timestamps: true,
   }
 );
+blogPostSchema.static("findBlogPostsWithAuthors", async function (query) {
+  const total = await this.countDocuments(query.criteria);
 
+  const blogPosts = await this.find(query.criteria, query.options.fields)
+    .limit(query.options.limit)
+    .skip(query.options.skip)
+    .sort(query.options.sort)
+    .populate({
+      path: "authors",
+      select: "firstName lastName",
+    });
+  return { total, blogPosts };
+});
 export default model("blogPost", blogPostSchema);
