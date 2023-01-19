@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import commentsSchema from "../comments/model.js";
+import likesSchema from "./likesModel.js";
 
 const { Schema, model } = mongoose;
 

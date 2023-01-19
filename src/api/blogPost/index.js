@@ -3,6 +3,8 @@ import createHttpError from "http-errors";
 import BlogPostModel from "./model.js";
 import CommentsModel from "../comments/model.js";
 import q2m from "query-to-mongo";
+import AuthorsModel from "../authors/model.js";
+import LikesModel from "./likesModel.js";
 
 const blogPostRouter = express.Router();
 
@@ -266,5 +268,75 @@ blogPostRouter.delete(
     }
   }
 );
+blogPostRouter.post("/:blogPostId/likes", async (req, res, next) => {
+  try {
+    const { authorId, quantity } = req.body;
+    const blogPost = await BlogPostModel.findById(req.params.blogPostId);
+    console.log("bID", blogPost);
+    if (!blogPost)
+      return next(
+        createHttpError(
+          404,
+          `Blog post with id ${req.params.blogPostId} not found`
+        )
+      );
+    const like = await AuthorsModel.findById(authorId);
+    if (!like)
+      return next(
+        createHttpError(404, `Author with id ${authorId} not found!`)
+      );
+    const isLiked = await LikesModel.findOne({
+      blogPost: req.params.blogPostId,
+      status: "Like",
+      "likes.authorId": authorId,
+    });
+    if (isLiked) {
+      // const quantity = -1;
+      // await LikesModel.findOneAndUpdate(
+      //   {
+      //     blogPost: req.params.blogPostId,
+      //     "likes.authorId": authorId,
+      //   },
+      //   { $inc: { "likes.$.quantity": quantity } }
+      // );
+      const updatedLike = await LikesModel.findOneAndUpdate(
+        {
+          blogPost: req.params.blogPostId,
+          "likes.authorId": authorId,
+        },
+        { $pull: { likes: { _id: req.params.commentId } } },
+        { new: true }
+      );
+      if (updatedLike) {
+        res.send(updatedLike);
+      } else {
+        next(
+          createHttpError(
+            404,
+            `BlogPost with id ${req.params.blogPostId} not found!`
+          )
+        );
+      }
+    } else {
+      const modifiedLike = await LikesModel.findOneAndUpdate(
+        {
+          blogPost: req.params.blogPostId,
+          status: "Like",
+        },
+        {
+          $push: { likes: { authorId: authorId }, quantity },
+        },
+        {
+          new: true,
+          runValidators: true,
+          upsert: true,
+        }
+      );
+      res.send(modifiedLike);
+    }
+  } catch (error) {
+    next(error);
+  }
+});
 
 export default blogPostRouter;
