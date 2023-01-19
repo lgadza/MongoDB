@@ -5,7 +5,11 @@ const { Schema, model } = mongoose;
 
 const blogPostSchema = new Schema(
   {
-    category: { type: String, required: true },
+    category: {
+      type: String,
+      required: true,
+      enum: ["history", "horror", "romance", "fantasy", "Politics"],
+    },
     title: { type: String, required: true },
     cover: { type: String },
     readTime: {
@@ -16,8 +20,9 @@ const blogPostSchema = new Schema(
       name: { type: String, required: true },
       avatar: { type: String },
     },
-    comments: { type: Array, required: true },
-    // comments: [commentsSchema],
+    // comments: { type: Array, required: true },
+    comments: [commentsSchema],
+    authors: [{ type: Schema.Types.ObjectId, ref: "Author" }],
   },
   {
     timestamps: true,
